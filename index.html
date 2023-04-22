@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Birthday Lookup</title>
+</head>
+<body>
+	<h1>Enter your birthday:</h1>
+	<form>
+		<label for="month">Month:</label>
+		<input type="number" name="month" id="month" min="1" max="12" required>
+		<label for="day">Day:</label>
+		<input type="number" name="day" id="day" min="1" max="31" required>
+		<button type="submit" onclick="getBirthdays()">Find Birthdays</button>
+	</form>
+	<h2>Famous people born on this day:</h2>
+	<ul id="birthdays"></ul>
+	<script>
+		function getBirthdays() {
+			const month = document.getElementById("month").value;
+			const day = document.getElementById("day").value;
+			const url = `https://api.openai.com/v1/data/birthdays?month=${month}&day=${day}`;
+
+			fetch(url, {
+				headers: {
+					"Authorization": "Bearer YOUR_API_KEY_HERE"
+				}
+			})
+			.then(response => response.json())
+			.then(data => {
+				const birthdays = document.getElementById("birthdays");
+
+				// Clear any previous results
+				birthdays.innerHTML = "";
+
+				if (data.data.length === 0) {
+					birthdays.innerHTML = "<li>No famous people were born on this day.</li>";
+				} else {
+					data.data.forEach(person => {
+						const name = person.name;
+						const description = person.description;
+
+						const li = document.createElement("li");
+						li.innerHTML = `<strong>${name}</strong>: ${description}`;
+						birthdays.appendChild(li);
+					});
+				}
+			})
+			.catch(error => {
+				console.error(error);
+			});
+		}
+	</script>
+</body>
+</html>
