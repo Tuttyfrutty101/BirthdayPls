@@ -22,7 +22,7 @@
 
 			fetch(url, {
 				headers: {
-					"Authorization": `Bearer ${{ secrets.API_KEY }}`
+					"Authorization": `Bearer ${secrets.API_KEY}`
 				}
 			})
 			.then(response => response.json())
